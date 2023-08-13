@@ -45,10 +45,12 @@ body, h1, h2, div, p {
   border-radius: 3px;
 }
 
+/* Display dropdown styling */
 .display-dropdown {
   margin-bottom: 20px;
 }
 
+/* Priority indicator for card header */
 .priority-indicator {
   width: 12px;
   height: 12px;
