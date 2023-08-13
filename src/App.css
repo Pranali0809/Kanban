@@ -1,38 +1,77 @@
-.App {
-  text-align: center;
+/* styles.css */
+
+body, h1, h2, div, p {
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.kanban-board {
+  display: flex;
+  gap: 20px; 
+  padding: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.kanban-column {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: #f9f9f9;
 }
 
-.App-link {
-  color: #61dafb;
+.kanban-column h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-tags {
+  margin-top: 5px;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #e0e0e0;
+  padding: 2px 6px;
+  margin-right: 5px;
+  border-radius: 3px;
+}
+
+.display-dropdown {
+  margin-bottom: 20px;
+}
+
+.priority-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.priority-urgent {
+  background-color: red;
+}
+
+.priority-high {
+  background-color: orange;
+}
+
+.priority-medium {
+  background-color: yellow;
+}
+
+.priority-low {
+  background-color: green;
+}
+
+.priority-no-priority {
+  background-color: gray;
 }
