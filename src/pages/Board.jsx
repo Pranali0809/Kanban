@@ -140,35 +140,31 @@ function KanbanBoard() {
       3: 3,
       4: 4,
     };
-    // Find the dragged card
+
     const draggedCardId = result.draggableId;
     const draggedCard = updatedData.tickets.find(
       (ticket) => ticket.id === draggedCardId
     );
 
-    // Update the status of the dragged card
-    let updatedColumn;
+
+
     if (displayMode === "status") {
       draggedCard.status = statusMapping[result.destination.droppableId];
-      updatedColumn = updatedData.tickets.filter(
-        (ticket) => ticket.status === draggedCard.status
-      );
+      
     } else if (displayMode === "priority") {
       draggedCard.priority = priorityMapping[result.destination.droppableId];
-      updatedColumn = updatedData.tickets.filter(
-        (ticket) => ticket.priority === draggedCard.priority
-      );
+    
     } else if (displayMode === "users") {
-      // Update the user of the dragged card
+ 
       const newUser = data.users.find(
         (user) => user.id.toString() === result.destination.droppableId
       );
       if (newUser) {
         draggedCard.userId = newUser.id;
-        // ...
+  
       }
     }
-    // Update the data by creating a new array
+
     const updatedTickets = updatedData.tickets.map((ticket) => {
       if (ticket.id === draggedCardId) {
         return draggedCard;
