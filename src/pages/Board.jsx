@@ -8,7 +8,7 @@ function KanbanBoard() {
   const [displayMode, setDisplayMode] = useState("status");
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('kanbanData'));
+    const storedData = JSON.parse(localStorage.getItem("kanbanData"));
     if (storedData) {
       setData(storedData);
     } else {
@@ -18,7 +18,7 @@ function KanbanBoard() {
 
   useEffect(() => {
     if (data) {
-      localStorage.setItem('kanbanData', JSON.stringify(data));
+      localStorage.setItem("kanbanData", JSON.stringify(data));
     }
   }, [data]);
 
@@ -122,56 +122,71 @@ function KanbanBoard() {
     return [];
   };
 
- const onDragEnd = (result) => {
-  if (!result.destination) {
-    return;
-  }
-
-  const updatedData = { ...data };
-  const statusMapping = {
-    "0": "Todo",
-    "1": "Inprogress",
-    "2": "Done",
-  };
-  const priorityMapping = {
-    "0": 0,
-    "1": 1,
-    "2": 2,
-    "3": 3,
-    "4": 4,
-  };
-
-  const draggedCardId = result.draggableId;
-  const draggedCard = updatedData.tickets.find((ticket) => ticket.id === draggedCardId);
-
-  // update status of dragged card
-  let updatedColumn;
-  if (displayMode === "status") {
-    draggedCard.status = statusMapping[result.destination.droppableId];
-    updatedColumn = updatedData.tickets.filter((ticket) => ticket.status === draggedCard.status);
-  } else if (displayMode === "priority") {
-    draggedCard.priority = priorityMapping[result.destination.droppableId];
-    updatedColumn = updatedData.tickets.filter((ticket) => ticket.priority === draggedCard.priority);
-  }
-  // update the data into a new array
-  const updatedTickets = updatedData.tickets.map((ticket) => {
-    if (ticket.id === draggedCardId) {
-      return draggedCard;
+  const onDragEnd = (result) => {
+    if (!result.destination) {
+      return;
     }
-    return ticket;
-  });
 
-  updatedData.tickets = updatedTickets;
-  console.log(updatedData);
-  setData(updatedData);
-  localStorage.setItem('kanbanData', JSON.stringify(updatedData));
-};
+    const updatedData = { ...data };
+    const statusMapping = {
+      0: "Todo",
+      1: "Inprogress",
+      2: "Done",
+    };
+    const priorityMapping = {
+      0: 0,
+      1: 1,
+      2: 2,
+      3: 3,
+      4: 4,
+    };
+    // Find the dragged card
+    const draggedCardId = result.draggableId;
+    const draggedCard = updatedData.tickets.find(
+      (ticket) => ticket.id === draggedCardId
+    );
 
+    // Update the status of the dragged card
+    let updatedColumn;
+    if (displayMode === "status") {
+      draggedCard.status = statusMapping[result.destination.droppableId];
+      updatedColumn = updatedData.tickets.filter(
+        (ticket) => ticket.status === draggedCard.status
+      );
+    } else if (displayMode === "priority") {
+      draggedCard.priority = priorityMapping[result.destination.droppableId];
+      updatedColumn = updatedData.tickets.filter(
+        (ticket) => ticket.priority === draggedCard.priority
+      );
+    } else if (displayMode === "users") {
+      // Update the user of the dragged card
+      const newUser = data.users.find(
+        (user) => user.id.toString() === result.destination.droppableId
+      );
+      if (newUser) {
+        draggedCard.userId = newUser.id;
+        // ...
+      }
+    }
+    // Update the data by creating a new array
+    const updatedTickets = updatedData.tickets.map((ticket) => {
+      if (ticket.id === draggedCardId) {
+        return draggedCard;
+      }
+      return ticket;
+    });
+
+    updatedData.tickets = updatedTickets;
+    console.log(updatedData);
+    setData(updatedData);
+    localStorage.setItem("kanbanData", JSON.stringify(updatedData));
+  };
 
   return (
-    <div className="kanban-board">
+    <div className="main">
       <div className="display-dropdown">
         <select
+          className="dropdown"
           value={displayMode}
           onChange={(e) => setDisplayMode(e.target.value)}
         >
@@ -182,25 +197,27 @@ function KanbanBoard() {
           ))}
         </select>
       </div>
-      <DragDropContext onDragEnd={onDragEnd}>
-        {getColumnCards(displayMode).map((column, columnIndex) => (
-          <Droppable
-            droppableId={columnIndex.toString()}
-            key={columnIndex.toString()}
-          >
-            {(provided) => (
-              <div
-                className="kanban-column"
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-              >
-                {column}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        ))}
-      </DragDropContext>
+      <div className="kanban-board">
+        <DragDropContext onDragEnd={onDragEnd}>
+          {getColumnCards(displayMode).map((column, columnIndex) => (
+            <Droppable
+              droppableId={columnIndex.toString()}
+              key={columnIndex.toString()}
+            >
+              {(provided) => (
+                <div
+                  className="kanban-column-parent"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {column}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          ))}
+        </DragDropContext>
+      </div>
     </div>
   );
 }
